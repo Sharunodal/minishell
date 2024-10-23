@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:42:58 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/22 13:28:31 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/23 11:18:35 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,9 +100,10 @@ int	main(int argc, char **argv, char **envp)
 			write(1, "exit\n", 5);
 			break ;
 		}
+		free_shell(&variables, tokens, token_groups);
+		
 	}
 	rl_clear_history();
-	free_shell(&variables, tokens, token_groups);
 	exit (exit_code);
 	return (0);
 }
