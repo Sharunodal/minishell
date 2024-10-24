@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/22 11:59:36 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/24 14:42:38 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,6 +74,16 @@ void	handle_signal(int sig);
 
 /*************** parse ***************/
 int		parse(t_var *variables);
+
+/************ parse_helper ***********/
+char	*split_redirections(char *input);
+
+/************ parse_utils ************/
+int		check_env(char *input, int i);
+int		validate_heredoc_input(char *input);
+int		check_symbols(char c);
+void	copy1_with_space(char *input, char *str, int *i, int *k);
+void	copy2_with_space(char *input, char *str, int *i, int *k);
 
 /************* find_path *************/
 char	*find_cmd_path(char *cmd, int i);

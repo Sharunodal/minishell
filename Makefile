@@ -6,7 +6,7 @@
 #    By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2024/09/03 11:23:04 by arissane          #+#    #+#              #
-#    Updated: 2024/10/22 11:02:37 by arissane         ###   ########.fr        #
+#    Updated: 2024/10/24 14:37:52 by arissane         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -16,9 +16,9 @@ CC = cc
 
 CFLAGS = -Wall -Werror -Wextra
 
-SRCS = main.c signals.c parse.c split_input.c execute.c split_tokens.c\
-       utils.c utils2.c pipes.c free_shell.c commands.c find_path.c tokens.c\
-       redirections.c check_chars.c redirect_fd.c\
+SRCS = main.c signals.c parse.c parse_utils.c parse_helper.c split_input.c\
+       execute.c split_tokens.c utils.c utils2.c pipes.c free_shell.c commands.c\
+       find_path.c tokens.c redirections.c check_chars.c redirect_fd.c\
        builtins/builtins_utils.c builtins/cd.c builtins/exit.c builtins/export.c\
        builtins/unset.c builtins/env.c builtins/echo.c builtins/pwd.c\
        builtins/heredoc.c
