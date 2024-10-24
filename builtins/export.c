@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:16:49 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/22 10:14:54 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/24 11:05:48 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static char	*check_export(t_token **token, int i, char ***cmd)
 		(*cmd)[0] = ft_strdup(token[i]->value);
 		(*cmd)[1] = ft_strdup("\'\'");
 		value = ft_strjoin(*cmd[0], "=\'\'");
+		//free_command(cmd);
 		return (value);
 	}
 	free_command(cmd);
@@ -63,18 +64,17 @@ static int	set_environment_variable(char *name, const char *value, t_var *var)
 	char	**new_environ;
 
 	k = unset(name, ft_strlen(name), var);
-	new_environ = malloc((k + 3) * sizeof(char *));
+	new_environ = malloc((k + 2) * sizeof(char *));
 	if (new_environ == NULL)
 		return (0);
 	j = 0;
-	while (j < k)
+	while (j <= k)
 	{
 		new_environ[j] = var->envp[j];
 		j++;
 	}
-	new_environ[k] = ft_strdup(name);
-	new_environ[k + 1] = ft_strdup(value);
-	new_environ[k + 2] = NULL;
+	new_environ[k] = ft_strdup(value);
+	new_environ[k + 1] = NULL;
 	var->envp = new_environ;
 	return (1);
 }
@@ -98,7 +98,7 @@ int	handle_export(t_token **token_group, t_var *var)
 	int		i;
 
 	i = find_command_index(token_group, "export");
-	if (i == -1)
+	if (i == 0 && token_group[i + 1] == NULL)
 		return (print_env_sorted(var));
 	while (token_group[i + 1] && token_group[i + 1]->type == 2)
 	{

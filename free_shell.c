@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:05:28 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/22 10:39:00 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/24 11:01:57 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -94,8 +94,6 @@ void	free_shell(t_var *var, t_token *tokens, t_token ***token_groups)
 		free_token_groups(token_groups);
 	if (tokens)
 		free_tokens(tokens);
-	if (var->og_envp)
-		free_env(&var->og_envp);
 	if (var->cmd_list)
 		free_list(var->cmd_list);
 }
