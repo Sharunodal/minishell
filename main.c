@@ -97,6 +97,7 @@ int	main(int argc, char **argv, char **envp)
 		if (variables.exit_code == -2)
 		{
 			exit_code = my_exit(token_groups[0]);
+			free_shell(&variables, tokens, token_groups);
 			write(1, "exit\n", 5);
 			break ;
 		}
