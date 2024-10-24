@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:42:58 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/24 11:02:24 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/10/24 11:14:39 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -104,8 +104,8 @@ int	main(int argc, char **argv, char **envp)
 		free_shell(&variables, tokens, token_groups);
 		
 	}
-	if (variables.og_envp)
-		free_env(&variables.og_envp);
+	if (variables.envp)
+		free_env(&variables.envp);
 	rl_clear_history();
 	exit (exit_code);
 	return (0);

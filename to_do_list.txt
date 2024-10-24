@@ -2,7 +2,7 @@ Left to do:
 -Edge cases
 -Clean up the code
 -Free everything before each exit
-
+-Leaks with cd, export, export+unset, $PWD, 
 
 Kind of working for now:
 -Display prompt

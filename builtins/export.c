@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:16:49 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/24 11:05:48 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/10/24 11:27:22 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,6 @@ static char	*check_export(t_token **token, int i, char ***cmd)
 		(*cmd)[0] = ft_strdup(token[i]->value);
 		(*cmd)[1] = ft_strdup("\'\'");
 		value = ft_strjoin(*cmd[0], "=\'\'");
-		//free_command(cmd);
 		return (value);
 	}
 	free_command(cmd);
@@ -75,6 +74,7 @@ static int	set_environment_variable(char *name, const char *value, t_var *var)
 	}
 	new_environ[k] = ft_strdup(value);
 	new_environ[k + 1] = NULL;
+	free(var->envp);
 	var->envp = new_environ;
 	return (1);
 }
