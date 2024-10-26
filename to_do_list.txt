@@ -1,8 +1,10 @@
 Left to do:
--Edge cases
--Clean up the code
--Free everything before each exit
--Leaks with cd, export, export+unset, $PWD, 
+-Leaks
+-Check everything works as expected:
+*cd does not work with "~" for example "cd ~/minishell/libft"
+*parsing gets the original env variables instead of the new env
+ variables, for example "export FOO=bar" followed by "echo $FOO"
+ results in an empty line
 
 Kind of working for now:
 -Display prompt
