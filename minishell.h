@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/24 14:42:38 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/26 14:01:26 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,6 +55,8 @@ typedef struct s_var
 	char		**cmd_list;
 	char		**envp;
 	char		**og_envp;
+	t_token		*tokens;
+	t_token		***token_groups;
 	int			is_redirect;
 	int			input_redir;
 	int			output_redir;
@@ -102,6 +104,7 @@ int		is_builtins(char *cmd);
 /************** utils2 ***************/
 char	*get_env_value(t_var *var, char *str, int i);
 void	close_heredoc_fds(t_var *var);
+int		count_cmd(char **cmd_list);
 
 /********* check_characters **********/
 void	check_characters(t_var *var, t_token **token_group);
@@ -121,7 +124,7 @@ void	free_list(char **list);
 void	free_command(char ***commands);
 void	free_token_groups(t_token ***token_groups);
 void	free_env(char ***env);
-void	free_shell(t_var *var, t_token *tokens, t_token ***token_groups);
+void	free_shell(t_var *var);
 
 /*************** tokens ***************/
 void	free_tokens(t_token *tokens);

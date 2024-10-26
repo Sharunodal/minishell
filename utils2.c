@@ -6,7 +6,7 @@
 /*   By: arissane <arissane@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 10:59:52 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/22 11:23:19 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/26 13:56:57 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,4 +79,20 @@ void	close_heredoc_fds(t_var *var)
 		}
 		free(var->heredoc_fds);
 	}
+}
+
+int	count_cmd(char **cmd_list)
+{
+	int	count;
+	int	i;
+
+	i = 0;
+	count = 0;
+	while (cmd_list[i])
+	{
+		if (ft_strcmp(cmd_list[i], "|") == 0)
+			count++;
+		i++;
+	}
+	return (count + 1);
 }

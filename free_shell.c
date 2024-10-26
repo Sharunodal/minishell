@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:05:28 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/24 11:01:57 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/10/26 14:01:08 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,14 +86,14 @@ void	free_env(char ***env)
 	}
 }
 
-void	free_shell(t_var *var, t_token *tokens, t_token ***token_groups)
+void	free_shell(t_var *var)
 {
 	if (var->input)
 		free(var->input);
-	if (token_groups)
-		free_token_groups(token_groups);
-	if (tokens)
-		free_tokens(tokens);
+	if (var->token_groups)
+		free_token_groups(var->token_groups);
+	if (var->tokens)
+		free_tokens(var->tokens);
 	if (var->cmd_list)
 		free_list(var->cmd_list);
 }
