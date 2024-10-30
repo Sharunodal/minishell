@@ -1,7 +1,7 @@
 Left to do:
 -Leaks
 -Check everything works as expected:
-*cd does not work with "~" for example "cd ~/minishell/libft"
+ *commands seem to work even if we unset PATH
 
 Kind of working for now:
 -Display prompt
