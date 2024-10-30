@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:42:58 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/26 14:04:21 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/30 10:47:38 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ int	g_status = 0;
 static void	initialise(t_var *variables)
 {
 	variables->input = NULL;
+	variables->str = NULL;
 	variables->cmd_list = NULL;
 	variables->tokens = NULL;
 	variables->token_groups = NULL;

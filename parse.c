@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:53:07 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/24 14:41:24 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/30 10:14:43 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,13 +37,10 @@ int	parse_cmd_list(t_var *var)
 
 int	parse(t_var *var)
 {
-	char	*input;
-
-	input = split_redirections(var->input);
-	if (!input)
+	if (split_redirections(var) == 1)
 		return (2);
-	var->cmd_list = split_input(input, ' ');
-	free(input);
+	var->cmd_list = split_input(var->str, ' ');
+	free(var->str);
 	if (!var->cmd_list)
 		return (1);
 	return (parse_cmd_list(var));

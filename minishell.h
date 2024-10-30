@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/26 14:01:26 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/30 10:46:14 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,7 @@ typedef struct s_redir
 typedef struct s_var
 {
 	char		*input;
+	char		*str;
 	char		**cmd_list;
 	char		**envp;
 	char		**og_envp;
@@ -78,10 +79,10 @@ void	handle_signal(int sig);
 int		parse(t_var *variables);
 
 /************ parse_helper ***********/
-char	*split_redirections(char *input);
+int	split_redirections(t_var *var);
 
 /************ parse_utils ************/
-int		check_env(char *input, int i);
+int		check_env(t_var *var, int i);
 int		validate_heredoc_input(char *input);
 int		check_symbols(char c);
 void	copy1_with_space(char *input, char *str, int *i, int *k);
@@ -102,6 +103,7 @@ int		ft_strcmp(const char *s1, const char *s2);
 int		is_builtins(char *cmd);
 
 /************** utils2 ***************/
+char	*ft_getenv(char *str, char **evnp);
 char	*get_env_value(t_var *var, char *str, int i);
 void	close_heredoc_fds(t_var *var);
 int		count_cmd(char **cmd_list);

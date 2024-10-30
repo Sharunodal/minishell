@@ -6,11 +6,30 @@
 /*   By: arissane <arissane@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 10:59:52 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/26 13:56:57 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/30 11:14:18 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+char	*ft_getenv(char *str, char **envp)
+{
+	char	*equal_sign;
+	size_t	len;
+
+	len = ft_strlen(str);
+	while (*envp != NULL)
+	{
+		equal_sign = ft_strchr(*envp, '=');
+		if (equal_sign != NULL)
+		{
+			if (ft_strncmp(*envp, str, len) == 0)
+				return (equal_sign + 1);
+		}
+		envp++;
+	}
+	return (NULL);
+}
 
 static char	*create_new_string(char *str, int i, char *value, int end)
 {
@@ -58,7 +77,7 @@ char	*get_env_value(t_var *var, char *str, int i)
 			&& str[end] != '\"' && str[end] != '\'')
 			end++;
 		temp = ft_substr(str, i + 1, end - (i + 1));
-		value = getenv(temp);
+		value = ft_getenv(temp, var->envp);
 		free(temp);
 	}
 	return (create_new_string(str, i, value, end));

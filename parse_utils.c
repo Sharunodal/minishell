@@ -6,13 +6,13 @@
 /*   By: arissane <arissane@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 14:31:07 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/24 14:37:00 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/30 11:04:27 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	check_env(char *input, int i)
+int	check_env(t_var *var, int i)
 {
 	int		j;
 	int		k;
@@ -24,16 +24,16 @@ int	check_env(char *input, int i)
 	j = i - 1;
 	k = 0;
 	len = 0;
-	while (input[j++] && input[j] != ' '
-		&& input[j] != '\"' && input[j] != '\'')
+	while (var->input[j++] && var->input[j] != ' '
+		&& var->input[j] != '\"' && var->input[j] != '\'')
 		len++;
 	temp = malloc(sizeof(char) * (len + 1));
 	if (!temp)
 		return (1);
 	while (k < len)
-		temp[k++] = input[i++];
+		temp[k++] = var->input[i++];
 	temp[len] = '\0';
-	envp = getenv(temp);
+	envp = ft_getenv(temp, var->envp);
 	free(temp);
 	if (!envp)
 		return (len + 1);
