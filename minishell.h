@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/30 10:46:14 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/30 11:37:54 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,9 @@ char	*ft_getenv(char *str, char **evnp);
 char	*get_env_value(t_var *var, char *str, int i);
 void	close_heredoc_fds(t_var *var);
 int		count_cmd(char **cmd_list);
+
+/************** utils3 ***************/
+int	ft_envcmp(char *envp, char *str);
 
 /********* check_characters **********/
 void	check_characters(t_var *var, t_token **token_group);

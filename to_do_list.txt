@@ -2,8 +2,6 @@ Left to do:
 -Leaks
 -Check everything works as expected:
 *cd does not work with "~" for example "cd ~/minishell/libft"
-*ft_getenv function needs a way to check if there is a full match in envp
- currently $USER and $U will both return the username
 
 Kind of working for now:
 -Display prompt

@@ -6,7 +6,7 @@
 /*   By: arissane <arissane@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/22 10:59:52 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/30 11:14:18 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/30 11:36:26 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,15 +15,13 @@
 char	*ft_getenv(char *str, char **envp)
 {
 	char	*equal_sign;
-	size_t	len;
 
-	len = ft_strlen(str);
 	while (*envp != NULL)
 	{
 		equal_sign = ft_strchr(*envp, '=');
 		if (equal_sign != NULL)
 		{
-			if (ft_strncmp(*envp, str, len) == 0)
+			if (ft_envcmp(*envp, str) == 0)
 				return (equal_sign + 1);
 		}
 		envp++;
