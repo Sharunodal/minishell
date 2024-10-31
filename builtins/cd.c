@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:25:42 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/31 12:07:04 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/10/31 12:25:57 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ void	export_cd(char *name, char *value, t_var *var)
 		new_environ[j] = var->envp[j];
 	new_environ[i] = new_var;
 	new_environ[i + 1] = NULL;
+	free(var->envp);
 	var->envp = new_environ;
 }
 
@@ -62,11 +63,28 @@ static int	check_cd(t_token **token, int i, char **new_path)
 	return (0);
 }
 
-static int	expand_home_path(t_token **token, int i, char **new_path)
+static int	build_expand(t_token **token, int i, char **new_path)
 {
 	char	*home;
 	char	expanded_path[260];
 
+	home = getenv("HOME");
+	if (home)
+	{
+		ft_strlcpy(expanded_path, home, sizeof(expanded_path));
+		ft_strlcat(expanded_path, token[i]->value + 1, sizeof(expanded_path));
+		*new_path = ft_strdup(expanded_path);
+	}
+	if (access(*new_path, F_OK) != 0)
+	{
+		ft_putstr_fd("cd: No such file or directory\n", 2);
+		return (1);
+	}
+	return (2);
+}
+
+static int	expand_home_path(t_token **token, int i, char **new_path)
+{
 	if (token[i])
 	{
 		if (token[i + 1] && token[i + 1]->type == 2)
@@ -75,20 +93,7 @@ static int	expand_home_path(t_token **token, int i, char **new_path)
 			return (1);
 		}
 		if (ft_strncmp(token[i]->value, "~/", 2) == 0)
-		{
-			home = getenv("HOME");
-			if (home)
-			{
-				ft_strlcpy(expanded_path, home, sizeof(expanded_path));
-				ft_strlcat(expanded_path, token[i]->value + 1, sizeof(expanded_path));
-				*new_path = ft_strdup(expanded_path);
-			}
-			if (access(*new_path, F_OK) != 0)
-			{
-				ft_putstr_fd("cd: No such file or directory\n", 2);
-				return (1);
-			}
-		}
+			return (build_expand(token, i, new_path));
 		else
 			return (check_cd(token, i, new_path));
 	}
@@ -96,7 +101,6 @@ static int	expand_home_path(t_token **token, int i, char **new_path)
 		return (check_cd(token, i, new_path));
 	return (2);
 }
-//check if we can use the function set_environment_variable in export instead of export_cd
 
 int	handle_cd(t_token **token_group, t_var *var)
 {
@@ -120,7 +124,6 @@ int	handle_cd(t_token **token_group, t_var *var)
 			return (1);
 		export_cd("OLDPWD", old_path, var);
 		export_cd("PWD", new_cwd, var);
-		//free (new_path);
 	}
 	else
 		return (1);
