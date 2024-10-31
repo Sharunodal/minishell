@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/30 11:37:54 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/31 10:54:01 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,7 +149,7 @@ int		handle_cd(t_token **token_group, t_var *var);
 void	copy_env(t_var *var, char **envp);
 int		handle_env(t_var *var);
 int		handle_export(t_token **token_group, t_var *var);
-int		unset(char *name, size_t name_len, t_var *var);
+int		ft_unset(char *name, size_t name_len, t_var *var);
 int		handle_unset(t_token **token, t_var *var);
 int		print_env_sorted(t_var *var);
 int		init_heredoc_fds(t_var *var);

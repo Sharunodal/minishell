@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:16:49 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/24 11:27:22 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/10/31 10:56:35 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ static int	set_environment_variable(char *name, const char *value, t_var *var)
 	int		j;
 	char	**new_environ;
 
-	k = unset(name, ft_strlen(name), var);
+	k = ft_unset(name, ft_strlen(name), var);
 	new_environ = malloc((k + 2) * sizeof(char *));
 	if (new_environ == NULL)
 		return (0);

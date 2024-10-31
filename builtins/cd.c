@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:25:42 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/30 16:52:18 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/10/31 10:53:23 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ void	export_cd(char *name, char *value, t_var *var)
 	tmp = ft_strjoin(name, "=");
 	new_var = ft_strjoin(tmp, value);
 	free(tmp);
-	i = unset(name, ft_strlen(name), var);
+	i = ft_unset(name, ft_strlen(name), var);
 	new_environ = malloc((i + 2) * sizeof(char *));
 	if (new_environ == NULL)
 	{
