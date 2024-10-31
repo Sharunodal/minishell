@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:25:42 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/31 10:53:23 by arissane         ###   ########.fr       */
+/*   Updated: 2024/10/31 11:51:52 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,24 +72,27 @@ static int	expand_home_path(t_token **token, int i, char **new_path)
 	char	*home;
 	char	expanded_path[260];
 
-	if (token[i + 1] && token[i + 1]->type == 2)
+	if (token[i])
 	{
-		ft_putstr_fd("cd: too many arguments\n", 2);
-		return (1);
-	}
-	if (ft_strncmp(token[i]->value, "~/", 2) == 0)
-	{
-		home = getenv("HOME");
-		if (home)
+		if (token[i + 1] && token[i + 1]->type == 2)
 		{
-			ft_strlcpy(expanded_path, home, sizeof(expanded_path));
-			ft_strlcat(expanded_path, token[i]->value + 1, sizeof(expanded_path));
-			*new_path = ft_strdup(expanded_path);
-		}
-		if (access(*new_path, F_OK) != 0)
-		{
-			ft_putstr_fd("cd: No such file or directory\n", 2);
+			ft_putstr_fd("cd: too many arguments\n", 2);
 			return (1);
+		}
+		if (ft_strncmp(token[i]->value, "~/", 2) == 0)
+		{
+			home = getenv("HOME");
+			if (home)
+			{
+				ft_strlcpy(expanded_path, home, sizeof(expanded_path));
+				ft_strlcat(expanded_path, token[i]->value + 1, sizeof(expanded_path));
+				*new_path = ft_strdup(expanded_path);
+			}
+			if (access(*new_path, F_OK) != 0)
+			{
+				ft_putstr_fd("cd: No such file or directory\n", 2);
+				return (1);
+			}
 		}
 	}
 	else
