@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:25:42 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/31 11:51:52 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/10/31 12:07:04 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,11 +52,6 @@ static int	check_cd(t_token **token, int i, char **new_path)
 		ft_putstr_fd("cd: No such file or directory\n", 2);
 		return (1);
 	}
-	else if (token[i + 1] && token[i + 1]->type == 2)
-	{
-		ft_putstr_fd("cd: too many arguments\n", 2);
-		return (1);
-	}
 	else if (token[i]->value[0] == '$')
 	{
 		*new_path = getenv(token[i]->value + 1);
@@ -94,6 +89,8 @@ static int	expand_home_path(t_token **token, int i, char **new_path)
 				return (1);
 			}
 		}
+		else
+			return (check_cd(token, i, new_path));
 	}
 	else
 		return (check_cd(token, i, new_path));
