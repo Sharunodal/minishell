@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:16:49 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/31 10:56:35 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/07 14:07:44 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,6 @@ static char	*check_export(t_token **token, int i, char ***cmd)
 		value = ft_strjoin(*cmd[0], "=\'\'");
 		return (value);
 	}
-	free_command(cmd);
 	return (NULL);
 }
 
@@ -83,12 +82,17 @@ static int	export_variable(t_token **token_group, int index, t_var *var)
 {
 	char	*new_var;
 	char	**cmd;
+	int		result;
 
 	new_var = check_export(token_group, index, &cmd);
+	result = 1;
 	if (new_var == NULL)
 		return (0);
 	if (!set_environment_variable(cmd[0], new_var, var))
-		return (0);
+		result = 0;
+	free(cmd[0]);
+	free(cmd[1]);
+	free(cmd);
 	free(new_var);
 	return (1);
 }

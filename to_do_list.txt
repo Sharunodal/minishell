@@ -1,9 +1,6 @@
 Left to do:
--Leaks
--Check everything works as expected:
- *commands seem to work even if we unset PATH
 
-Kind of working for now:
+Should be working for now:
 -Display prompt
 -Working history
 -Handle quotes

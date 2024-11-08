@@ -6,13 +6,13 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/02 09:35:42 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/22 14:19:46 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/08 13:31:31 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_token	*copy_token(t_token *token)
+static t_token	*copy_token(t_token *token)
 {
 	t_token	*copy;
 
@@ -31,7 +31,7 @@ t_token	*copy_token(t_token *token)
 	return (copy);
 }
 
-t_token	**process_token_group(t_token *tokens, int *k, int *i)
+static t_token	**process_token_group(t_token *tokens, int *k, int *i)
 {
 	int		j;
 	t_token	**token_group;

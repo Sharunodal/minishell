@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/16 17:13:54 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/22 11:37:21 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/07 13:12:53 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ static void	create_token(char *cmd_part, t_token *tokens, t_var *var)
 {
 	char	*path;
 
-	path = find_cmd_path(cmd_part, 0);
+	path = find_cmd_path(cmd_part, 0, var);
 	if (!cmd_part)
 		return ;
 	else if (is_builtins(cmd_part) == 9)

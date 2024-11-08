@@ -6,13 +6,13 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:25:42 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/31 12:25:57 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/11/08 13:26:40 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	export_cd(char *name, char *value, t_var *var)
+static void	export_cd(char *name, char *value, t_var *var)
 {
 	int		i;
 	int		j;

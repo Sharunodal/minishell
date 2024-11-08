@@ -6,44 +6,34 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:26:15 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/22 10:07:14 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/08 10:49:57 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void	handle_signal(int sig)
+void	handle_sigquit(int sig)
 {
-	if (sig == SIGINT)
-	{
-		if (g_status == HEREDOC)
-		{
-			write(1, "\n", 1);
-			g_status = FAILURE;
-			close(STDIN_FILENO);
-		}
-		else
-		{
-			write(1, "\n", 1);
-			rl_on_new_line();
-			rl_replace_line("", 0);
-			rl_redisplay();
-		}
-	}
+	g_signal = sig;
 }
 
-static void	disable_control_chars(void)
+void	handle_sigint_heredoc(int sig)
 {
-	struct termios	termios_p;
-
-	tcgetattr(STDIN_FILENO, &termios_p);
-	termios_p.c_lflag &= ~(ECHOCTL);
-	tcsetattr(STDIN_FILENO, TCSANOW, &termios_p);
+	write(1, "\n", 1);
+	g_signal = sig;
+	close(STDIN_FILENO);
 }
 
-void	init_signal(void)
+void	handle_sigint_exec(int sig)
 {
-	signal(SIGINT, handle_signal);
-	signal(SIGQUIT, SIG_IGN);
-	disable_control_chars();
+	g_signal = sig;
+}
+
+void	handle_sigint(int sig)
+{
+	write(1, "\n", 1);
+	rl_on_new_line();
+	rl_replace_line("", 0);
+	rl_redisplay();
+	(void)sig;
 }

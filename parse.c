@@ -6,13 +6,13 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 09:53:07 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/30 10:14:43 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/08 13:29:22 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	parse_cmd_list(t_var *var)
+static int	parse_cmd_list(t_var *var)
 {
 	int	i;
 

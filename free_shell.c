@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/25 15:05:28 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/26 14:01:08 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/07 13:56:48 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,9 +22,11 @@ void	free_list(char **list)
 	while (list[i])
 	{
 		free(list[i]);
+		list[i] = NULL;
 		i++;
 	}
 	free(list);
+	list = NULL;
 }
 
 void	free_command(char ***commands)
@@ -37,9 +39,11 @@ void	free_command(char ***commands)
 		while (commands[i])
 		{
 			free_list(commands[i]);
+			commands[i] = NULL;
 			i++;
 		}
 		free(commands);
+		commands = NULL;
 	}
 }
 

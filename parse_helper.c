@@ -6,7 +6,7 @@
 /*   By: arissane <arissane@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/24 14:38:02 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/30 10:27:53 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/08 10:43:25 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -126,7 +126,8 @@ int	split_redirections(t_var *var)
 	k = 0;
 	while (var->input[i])
 	{
-		if (var->input[i] == '>' || var->input[i] == '<' || var->input[i] == '|')
+		if (var->input[i] == '>' || var->input[i] == '<'
+			|| var->input[i] == '|')
 			k += 2;
 		i++;
 		k++;

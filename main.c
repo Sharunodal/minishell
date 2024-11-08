@@ -6,13 +6,13 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:42:58 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/30 10:47:38 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/08 11:02:03 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	g_status = 0;
+int	g_signal = 0;
 
 static void	initialise(t_var *variables)
 {
@@ -52,6 +52,8 @@ static int	handle_commands(t_var *var)
 			handle_pipe(var->token_groups, var->nb_cmd, var);
 		}
 	}
+	else
+		return (2);
 	close_heredoc_fds(var);
 	return (0);
 }
@@ -61,17 +63,19 @@ static int	parse_and_execute(t_var *var)
 	if (parse(var) == 2)
 	{
 		var->exit_code = 2;
-		printf("parse error");
+		printf("parse error\n");
 	}
-	else
-		handle_commands(var);
-	if (g_status == FAILURE)
+	else if (handle_commands(var) == 2)
 	{
-		var->exit_code = 130;
+		close_heredoc_fds(var);
 		rl_on_new_line();
 		rl_replace_line("", 0);
 	}
-	g_status = 0;
+	if (g_signal == SIGINT)
+		var->exit_code = 130;
+	if (g_signal == SIGQUIT)
+		var->exit_code = 131;
+	g_signal = 0;
 	return (0);
 }
 

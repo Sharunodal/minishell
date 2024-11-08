@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/10/31 10:54:01 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/08 13:19:23 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <errno.h>
 # include <dirent.h>
 
-extern int	g_status;
+extern int	g_signal;
 
 # define COMMAND 1
 # define ARGUMENT 2
@@ -34,7 +34,6 @@ extern int	g_status;
 # define REDIRECTION_RIGHT 6
 # define APPEND 7
 # define HEREDOC 8
-# define FAILURE 9
 
 typedef struct s_token
 {
@@ -73,13 +72,16 @@ typedef struct s_var
 
 /************** signal ***************/
 void	init_signal(void);
-void	handle_signal(int sig);
+void	handle_sigint(int sig);
+void	handle_sigint_exec(int sig);
+void	handle_sigquit(int sig);
+void	handle_sigint_heredoc(int sig);
 
 /*************** parse ***************/
 int		parse(t_var *variables);
 
 /************ parse_helper ***********/
-int	split_redirections(t_var *var);
+int		split_redirections(t_var *var);
 
 /************ parse_utils ************/
 int		check_env(t_var *var, int i);
@@ -89,10 +91,10 @@ void	copy1_with_space(char *input, char *str, int *i, int *k);
 void	copy2_with_space(char *input, char *str, int *i, int *k);
 
 /************* find_path *************/
-char	*find_cmd_path(char *cmd, int i);
+char	*find_cmd_path(char *cmd, int i, t_var *var);
 
 /*************** pipes ***************/
-void	handle_pipe(t_token **commands[], int num_commands, t_var *var);
+void	handle_pipe(t_token ***commands, int num_commands, t_var *var);
 
 /************ split_input ************/
 char	**split_input(char const *s, char c);
@@ -109,7 +111,7 @@ void	close_heredoc_fds(t_var *var);
 int		count_cmd(char **cmd_list);
 
 /************** utils3 ***************/
-int	ft_envcmp(char *envp, char *str);
+int		ft_envcmp(char *envp, char *str);
 
 /********* check_characters **********/
 void	check_characters(t_var *var, t_token **token_group);
@@ -157,7 +159,6 @@ int		handle_heredoc(t_var *var, t_token *tokens);
 int		redirect_heredoc(t_var *var, t_token *token);
 int		handle_pwd(t_var *var);
 int		handle_echo(t_token **token_group);
-
 int		my_exit(t_token **token);
 
 /********** builtins_utils ************/

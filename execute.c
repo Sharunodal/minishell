@@ -6,38 +6,36 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:05:12 by arissane          #+#    #+#             */
-/*   Updated: 2024/10/22 10:12:37 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/08 13:28:13 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	handle_exec_errors(char *command)
+static int	handle_exec_errors(char *command)
 {
 	int	error_code;
 
-	error_code = 127;
+	error_code = 0;
 	if ((command[0] == '.' && command[1] == '/') || command[0] == '/')
 	{
+		error_code = 126;
 		if (access(command, F_OK) != 0)
 		{
 			error_code = 127;
 			ft_putstr_fd(" No such file or directory\n", 2);
 		}
 		else if (opendir(command) != NULL)
-		{
-			error_code = 126;
 			ft_putstr_fd(" Is a directory\n", 2);
-		}
 		else if (access(command, X_OK) != 0)
-		{
-			error_code = 126;
 			ft_putstr_fd(" Permission denied\n", 2);
-		}
 	}
 	else if ((command[0] != '<' && command[1] != '<')
 		&& (command[0] != '>' && command[1] != '>'))
+	{
+		error_code = 127;
 		ft_putstr_fd(" command not found\n", 2);
+	}
 	return (error_code);
 }
 
@@ -68,6 +66,7 @@ static int	execve_args(t_token **token, char *cmd_path, t_var *var)
 	char	**args;
 	int		size;
 
+	signal(SIGQUIT, SIG_DFL);
 	size = 0;
 	while (token[size])
 		size++;
@@ -93,7 +92,6 @@ static int	fork_exec(t_token **token, t_var *var, char *path, int pid)
 
 	if (pid == 0)
 	{
-		signal(SIGQUIT, SIG_DFL);
 		if (execve_args(token, path, var) == -1)
 		{
 			handle_exec_errors(token[0]->value);
@@ -103,7 +101,8 @@ static int	fork_exec(t_token **token, t_var *var, char *path, int pid)
 	}
 	else
 	{
-		signal(SIGINT, SIG_IGN);
+		signal(SIGQUIT, handle_sigquit);
+		signal(SIGINT, handle_sigint_exec);
 		if (waitpid(pid, &status, 0) == -1)
 		{
 			perror("waitpid failure");
@@ -131,7 +130,7 @@ int	execute_command(t_token **token_group, t_var *var)
 		}
 	}
 	else
-		cmd_path = find_cmd_path(token_group[0]->value, 0);
+		cmd_path = find_cmd_path(token_group[0]->value, 0, var);
 	if (!cmd_path)
 		return (handle_exec_errors(token_group[0]->value));
 	pid = fork();
