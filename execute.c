@@ -6,68 +6,17 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:05:12 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/11 12:22:20 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/18 14:45:15 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static int	handle_exec_errors(char *command)
-{
-	int	error_code;
-
-	error_code = 0;
-	if ((command[0] == '.' && command[1] == '/') || command[0] == '/')
-	{
-		error_code = 126;
-		if (access(command, F_OK) != 0)
-		{
-			error_code = 127;
-			ft_putstr_fd(" No such file or directory\n", 2);
-		}
-		else if (opendir(command) != NULL)
-			ft_putstr_fd(" Is a directory\n", 2);
-		else if (access(command, X_OK) != 0)
-			ft_putstr_fd(" Permission denied\n", 2);
-	}
-	else if ((command[0] != '<' && command[1] != '<')
-		&& (command[0] != '>' && command[1] != '>'))
-	{
-		error_code = 127;
-		ft_putstr_fd(" command not found\n", 2);
-	}
-	return (error_code);
-}
-
-static char	**fill_args(t_token **token, char **args)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	while (token[j])
-	{
-		if (token[j]->type > 4 && token[j]->type < 9)
-			j++;
-		else if (token[j]->type == 2 || token[j]->type == 1)
-		{
-			args[i] = token[j]->value;
-			i++;
-		}
-		j++;
-	}
-	args[i] = NULL;
-	return (args);
-}
-
-static int	execve_args(t_token **token, char *cmd_path, t_var *var)
+static int	execve_args(t_token **token, char *cmd_path, t_var *var, int size)
 {
 	char	**args;
-	int		size;
 
 	signal(SIGQUIT, SIG_DFL);
-	size = 0;
 	while (token[size])
 		size++;
 	args = (char **)malloc(sizeof(char *) * (size + 1));
@@ -78,67 +27,91 @@ static int	execve_args(t_token **token, char *cmd_path, t_var *var)
 		return (1);
 	if (execve(cmd_path, args, var->envp) == -1)
 	{
-		perror("command not found");
 		free(args);
+		if (access(cmd_path, X_OK) != 0)
+		{
+			perror("Permission denied");
+			exit(126);
+		}
+		perror("command not found");
 		exit(errno);
 	}
 	free(args);
 	return (0);
 }
 
-static int	fork_exec(t_token **token, t_var *var, char *path, int pid)
+static int	exec_parent_process(int pid)
 {
+	int	signal_number;
 	int	status;
 
+	signal(SIGQUIT, handle_sigquit_exec);
+	signal(SIGINT, handle_sigint_exec);
+	if (waitpid(pid, &status, 0) == -1)
+	{
+		perror("waitpid failure");
+		return (1);
+	}
+	if (WIFSIGNALED(status))
+	{
+		signal_number = WTERMSIG(status);
+		if (signal_number == SIGSEGV)
+		{
+			ft_putstr_fd("Segmentation fault (core dumped)\n", 2);
+			return (139);
+		}
+		return (128 + signal_number);
+	}
+	return (WEXITSTATUS(status));
+}
+
+static int	fork_exec(t_token **token, t_var *var, char *path, char *cmd)
+{
+	int	pid;
+
+	if (var->fd_in != -1)
+		close(var->fd_in);
+	pid = fork();
+	if (pid < 0)
+	{
+		perror("fork failed");
+		free(path);
+		return (-1);
+	}
 	if (pid == 0)
 	{
-		if (execve_args(token, path, var) == -1)
+		if (execve_args(token, path, var, 0) == -1)
 		{
-			handle_exec_errors(token[0]->value);
+			handle_exec_errors(cmd);
 			free(path);
+			free_shell(var);
 			exit(1);
 		}
 	}
 	else
 	{
-		signal(SIGQUIT, handle_sigquit_exec);
-		signal(SIGINT, handle_sigint_exec);
-		if (waitpid(pid, &status, 0) == -1)
-		{
-			perror("waitpid failure");
-			free(path);
-			return (1);
-		}
 		free(path);
-		return (WEXITSTATUS(status));
+		return (exec_parent_process(pid));
 	}
 	return (1);
 }
 
-int	execute_command(t_token **token_group, t_var *var)
+int	execute_command(t_token **token_group, t_var *var, char *cmd)
 {
 	char	*cmd_path;
-	pid_t	pid;
 
-	if (token_group[0]->value[0] == '/')
+	if (cmd[0] == '/' || cmd[0] == '.')
 	{
-		cmd_path = strdup(token_group[0]->value);
+		cmd_path = ft_strdup(cmd);
 		if (opendir(cmd_path) != NULL || access(cmd_path, F_OK) != 0)
 		{
 			free(cmd_path);
-			return (handle_exec_errors(token_group[0]->value));
+			return (handle_exec_errors(cmd));
 		}
 	}
 	else
-		cmd_path = find_cmd_path(token_group[0]->value, 0, var);
+		cmd_path = find_cmd_path(cmd, 0, var);
 	if (!cmd_path)
-		return (handle_exec_errors(token_group[0]->value));
-	pid = fork();
-	if (pid < 0)
-	{
-		perror("fork failed");
-		free(cmd_path);
-		return (-1);
-	}
-	return (fork_exec(token_group, var, cmd_path, pid));
+		return (handle_exec_errors(cmd));
+	return (fork_exec(token_group, var, cmd_path, cmd));
 }

@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/11 13:38:01 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/15 12:34:03 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@
 # include <stdbool.h>
 # include <sys/wait.h>
 # include <errno.h>
+# include <limits.h>
 # include <dirent.h>
 
 extern int	g_signal;
@@ -34,6 +35,7 @@ extern int	g_signal;
 # define REDIRECTION_RIGHT 6
 # define APPEND 7
 # define HEREDOC 8
+# define EMPTY_LINE 9
 
 typedef struct s_token
 {
@@ -57,6 +59,7 @@ typedef struct s_var
 	char		**og_envp;
 	t_token		*tokens;
 	t_token		***token_groups;
+	int			status;
 	int			is_redirect;
 	int			input_redir;
 	int			output_redir;
@@ -69,7 +72,8 @@ typedef struct s_var
 	int			fd_in;
 }	t_var;
 
-/*************** main ****************/
+/******** parse_and_execute **********/
+void	parse_and_execute(t_var *var);
 
 /************** signal ***************/
 void	init_signal(void);
@@ -82,10 +86,10 @@ void	handle_sigint_heredoc(int sig);
 int		parse(t_var *variables);
 
 /************ parse_helper ***********/
-int		split_redirections(t_var *var);
+int		parse_add_spaces(t_var *var, int i, int k);
 
 /************ parse_utils ************/
-int		check_env(t_var *var, int i);
+int		check_env(t_var *var, int i, int k);
 int		validate_heredoc_input(char *input);
 int		check_symbols(char c);
 void	copy1_with_space(char *input, char *str, int *i, int *k);
@@ -113,16 +117,23 @@ int		count_cmd(char **cmd_list);
 
 /************** utils3 ***************/
 int		ft_envcmp(char *envp, char *str);
+long	ft_atol(const char *str, int i);
+int		validate_cmd_path(char *cmd);
 
 /********* check_characters **********/
-void	check_characters(t_var *var, t_token **token_group);
-char	*remove_quotes(t_var *var, char *str);
+void	check_characters(t_token **token_group);
+char	*remove_quotes(char *str);
+int		is_inside_quotes(char c, int *depth, char *outer_quote);
 
 /************* commands ***************/
 int		run_command(t_var *var, t_token **token_group);
 
 /************* execute ****************/
-int		execute_command(t_token **token_group, t_var *var);
+int		execute_command(t_token **token_group, t_var *var, char *cmd);
+
+/********** execute_utils *************/
+int		handle_exec_errors(char *command);
+char	**fill_args(t_token **token, char **args);
 
 /*********** split_tokens *************/
 t_token	***split_tokens(t_var *var, t_token *tokens);
@@ -136,7 +147,7 @@ void	free_shell(t_var *var);
 
 /*************** tokens ***************/
 void	free_tokens(t_token *tokens);
-void	tokenize_cmd_list(t_var *var, t_token *tokens);
+int		tokenize_cmd_list(t_var *var, t_token *tokens);
 int		count_cmd_list(char **cmd_list);
 
 /*********** redirections *************/
@@ -150,7 +161,7 @@ int		redirect_append(char *target, t_var *var);
 /************* builtins ***************/
 int		handle_cd(t_token **token_group, t_var *var);
 void	copy_env(t_var *var, char **envp);
-int		handle_env(t_var *var);
+int		handle_env(t_var *var, t_token **token);
 int		handle_export(t_token **token_group, t_var *var);
 int		ft_unset(char *name, size_t name_len, t_var *var);
 int		handle_unset(t_token **token, t_var *var);
@@ -164,6 +175,8 @@ int		my_exit(t_token **token);
 
 /********** builtins_utils ************/
 int		find_command_index(t_token **tokens, const char *command);
-int		is_valid_identifier(const char *arg);
+int		is_valid_identifier(const char *arg, char *cmd);
+void	change_env_cd(char *old_pwd, char *new_pwd, t_var *var);
+void	export_cd(char *name, char *value, t_var *var);
 
 #endif

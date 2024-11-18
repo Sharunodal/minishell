@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/04 14:26:15 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/11 12:39:41 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/15 10:53:57 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,20 +34,11 @@ void	handle_sigint_exec(int sig)
 	write(1, "\n", 1);
 	g_signal = sig;
 }
-/*
+
+//Force the readline function stop waiting for more input
+//and handle the different cases in the main
 void	handle_sigint(int sig)
 {
-	write(1, "\n", 1);
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-	g_signal = sig;
-}*/
-//I use the same logic as sigint_heredoc in order to
-//force the readline function stop waiting for more input
-void	handle_sigint(int sig)
-{
-	write(1, "\n", 1);
 	g_signal = sig;
 	close(STDIN_FILENO);
 }

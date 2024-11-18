@@ -6,24 +6,26 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/03 15:25:42 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/08 13:26:40 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/11/15 12:50:06 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static void	export_cd(char *name, char *value, t_var *var)
+void	export_cd(char *name, char *value, t_var *var)
 {
 	int		i;
 	int		j;
-	char	*tmp;
 	char	*new_var;
 	char	**new_environ;
 
-	tmp = ft_strjoin(name, "=");
-	new_var = ft_strjoin(tmp, value);
-	free(tmp);
+	if (value)
+		new_var = ft_strjoin(name, value);
+	else
+		new_var = name;
+	name = ft_strtrim(name, "=");
 	i = ft_unset(name, ft_strlen(name), var);
+	free(name);
 	new_environ = malloc((i + 2) * sizeof(char *));
 	if (new_environ == NULL)
 	{
@@ -108,22 +110,22 @@ int	handle_cd(t_token **token_group, t_var *var)
 	char	old_path[260];
 	char	*new_path;
 	int		i;
-	int		result;
 
-	if (!getcwd(old_path, sizeof(old_path)))
-		return (1);
+	new_path = NULL;
+	getcwd(old_path, sizeof(old_path));
 	i = find_command_index(token_group, "cd");
-	result = expand_home_path(token_group, i + 1, &new_path);
-	if (result == 0)
-		new_path = token_group[i + 1]->value;
-	else if (result == 1)
+	if (expand_home_path(token_group, i + 1, &new_path) == 1)
 		return (1);
-	if (new_path && chdir(new_path) == 0)
+	if (!new_path)
+		new_path = token_group[i + 1]->value;
+	if (chdir(new_path) == 0)
 	{
 		if (!getcwd(new_cwd, sizeof(new_cwd)))
-			return (1);
-		export_cd("OLDPWD", old_path, var);
-		export_cd("PWD", new_cwd, var);
+		{
+			if (chdir("..") != 0 || !getcwd(new_cwd, sizeof(new_cwd)))
+				return (1);
+		}
+		change_env_cd(old_path, new_cwd, var);
 	}
 	else
 		return (1);

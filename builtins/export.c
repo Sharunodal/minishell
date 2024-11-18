@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/05 18:16:49 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/07 14:07:44 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/11/14 13:35:13 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,22 +14,25 @@
 
 static char	*handle_equal_sign(t_token **token, char *str, char ***cmd, int i)
 {
-	char	*temp;
 	char	*value;
+	int		len;
 
-	*str = '\0';
-	(*cmd)[0] = ft_strdup(token[i]->value);
-	(*cmd)[1] = ft_strdup(str + 1);
-	if ((*cmd)[0] == NULL || (*cmd)[1] == NULL)
-		return (NULL);
-	value = ft_strjoin((*cmd)[0], "=");
-	if (!value)
-		return (NULL);
-	temp = ft_strjoin(value, (*cmd)[1]);
-	free(value);
-	if (!temp)
-		return (NULL);
-	return (temp);
+	if (str[1] == '\0')
+	{
+		(*cmd)[0] = ft_strtrim(token[i]->value, "=");
+		value = ft_strjoin(token[i]->value, "\"\"");
+	}
+	else
+	{
+		len = str - token[i]->value;
+		(*cmd)[0] = ft_substr(token[i]->value, 0, len);
+		if ((*cmd)[0] == NULL)
+			return (NULL);
+		value = ft_strdup(token[i]->value);
+		if (!value)
+			return (NULL);
+	}
+	return (value);
 }
 
 static char	*check_export(t_token **token, int i, char ***cmd)
@@ -37,9 +40,9 @@ static char	*check_export(t_token **token, int i, char ***cmd)
 	char	*equal_sign;
 	char	*value;
 
-	if (is_valid_identifier(token[i]->value))
+	if (is_valid_identifier(token[i]->value, "export"))
 		return (NULL);
-	*cmd = malloc(2 * sizeof(char *));
+	*cmd = malloc(sizeof(char *));
 	if (!(*cmd))
 		return (NULL);
 	equal_sign = ft_strchr(token[i]->value, '=');
@@ -48,14 +51,13 @@ static char	*check_export(t_token **token, int i, char ***cmd)
 	else
 	{
 		(*cmd)[0] = ft_strdup(token[i]->value);
-		(*cmd)[1] = ft_strdup("\'\'");
-		value = ft_strjoin(*cmd[0], "=\'\'");
+		value = ft_strdup(token[i]->value);
 		return (value);
 	}
 	return (NULL);
 }
 
-static int	set_environment_variable(char *name, const char *value, t_var *var)
+static int	set_environment_variable(char *name, char *value, t_var *var)
 {
 	int		k;
 	int		j;
@@ -66,6 +68,9 @@ static int	set_environment_variable(char *name, const char *value, t_var *var)
 	if (new_environ == NULL)
 		return (0);
 	j = 0;
+	k = 0;
+	while (var->envp[k])
+		k++;
 	while (j <= k)
 	{
 		new_environ[j] = var->envp[j];
@@ -91,7 +96,6 @@ static int	export_variable(t_token **token_group, int index, t_var *var)
 	if (!set_environment_variable(cmd[0], new_var, var))
 		result = 0;
 	free(cmd[0]);
-	free(cmd[1]);
 	free(cmd);
 	free(new_var);
 	return (1);
@@ -99,7 +103,7 @@ static int	export_variable(t_token **token_group, int index, t_var *var)
 
 int	handle_export(t_token **token_group, t_var *var)
 {
-	int		i;
+	int	i;
 
 	i = find_command_index(token_group, "export");
 	if (i == 0 && token_group[i + 1] == NULL)
@@ -107,8 +111,8 @@ int	handle_export(t_token **token_group, t_var *var)
 	while (token_group[i + 1] && token_group[i + 1]->type == 2)
 	{
 		if (!export_variable(token_group, i + 1, var))
-			return (1);
+			var->exit_code = 1;
 		i++;
 	}
-	return (0);
+	return (var->exit_code);
 }
