@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:05:12 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/18 14:45:15 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/18 16:50:34 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ static int	execve_args(t_token **token, char *cmd_path, t_var *var, int size)
 			exit(126);
 		}
 		perror("command not found");
-		exit(errno);
+		exit(127);
 	}
 	free(args);
 	return (0);
