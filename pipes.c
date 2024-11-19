@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:27:40 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/18 16:37:32 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/19 10:36:57 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -78,10 +78,12 @@ static void	handle_child_process(t_var *var, t_token **token_group)
 	if (check == -2)
 	{
 		check = run_command(var, token_group);
+		close_heredoc_fds(var);
 		free_env(&var->envp);
 		free_shell(var);
 		exit(check);
 	}
+	close_heredoc_fds(var);
 	free_env(&var->envp);
 	free_shell(var);
 	exit(check);
