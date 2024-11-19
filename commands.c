@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:55:28 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/15 13:01:15 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/11/19 13:33:10 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ int	run_command(t_var *var, t_token **token_group)
 
 	if (!token_group)
 		return (0);
+	if (ft_strcmp(token_group[0]->value, "\"\"") == 0)
+		return (127);
 	check_characters(token_group);
 	cmd = find_command(token_group);
 	if (!cmd)

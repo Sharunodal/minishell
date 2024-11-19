@@ -1,5 +1,4 @@
 Left to do:
-*only having "" as input causes leaks 
 *"/bin/ls/hi" -> exit code should be 126, not 127
 *"export hi" -> "hi" should not appear when env is called, only when export is called
 *"export hi=" -> should only appear as "hi=" in env, but as "hi=""" in export
@@ -10,6 +9,9 @@ Left to do:
 
 
 Done:
+*only having "" as input causes leaks 
+
+
 Pressing only enter after a executing a command should not reset the exit code
 Spaces | cat -e
 Env -i .\minishell => env -i bash => if it’s null create a default env 
