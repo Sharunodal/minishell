@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:33 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/14 15:01:21 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/19 14:18:41 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,12 @@ int	validate_cmd_path(char *cmd)
 	int	error_code;
 
 	error_code = 0;
-	if (access(cmd, F_OK) != 0)
+	if (access(cmd, F_OK) != 0 && errno == ENOTDIR)
+	{
+		error_code = 126;
+		ft_putstr_fd(" Not a directory\n", 2);
+	}
+	else if (access(cmd, F_OK) != 0)
 	{
 		error_code = 127;
 		ft_putstr_fd(" No such file or directory\n", 2);
