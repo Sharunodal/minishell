@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 17:45:51 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/18 14:53:19 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/19 15:24:51 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,10 @@ void	copy_env(t_var *var, char **envp)
 
 int	handle_env(t_var *var, t_token **token)
 {
-	int	i;
+	int		i;
+	char	*tmp;
 
 	i = find_command_index(token, "env");
-	ft_unset("COLUMNS", ft_strlen("COLUMNS"), var);
-	ft_unset("LINES", ft_strlen("LINES"), var);
 	if (token[i + 1] && token[i + 1]->type == 2)
 	{
 		printf("Too many arguments\n");
@@ -66,7 +65,15 @@ int	handle_env(t_var *var, t_token **token)
 	i = 0;
 	while (var->envp[i] != NULL)
 	{
-		printf("%s\n", var->envp[i]);
+		tmp = ft_strchr(var->envp[i], '=');
+		if (tmp != 0 && tmp[1] != '\"' && tmp[2] != '\"')
+			printf("%s\n", var->envp[i]);
+		else if (tmp != 0)
+		{
+			tmp = ft_strtrim(var->envp[i], "\"");
+			printf("%s\n", tmp);
+			free(tmp);
+		}
 		i++;
 	}
 	return (0);
@@ -94,7 +101,7 @@ int	print_env_sorted(t_var *var)
 	j = 0;
 	while (j < i)
 	{
-		printf("%s\n", sorted_env[j]);
+		printf("declare -x %s\n", sorted_env[j]);
 		j++;
 	}
 	free(sorted_env);
