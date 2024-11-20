@@ -1,7 +1,13 @@
 Left to do:
-*"cat << $USER"
- "$PWD        "
- "$USER       " -> multiple fds left open in the child process?
+*"cat << 1 | echo a" -> multiple fds left open in the child process?
+from chatgpt:
+What’s Happening with These FDs:
+
+FD 3 (/dev/pts/2): This is typical for interactive terminal sessions. It’s the pseudo-terminal that the shell and programs use to interact with your terminal.
+FD 4 and 5: These are not associated with any specific files or devices in your output, but they are open because of the shell environment. These might be related to things like standard pipes or files used by the shell to manage input/output redirection, or other system-level operations.
+Why These FDs Are Open: These open file descriptors likely come from the shell environment itself, which manages things like file redirection and pipes. In your case, the shell opens them to handle standard input/output, the here-document mechanism (<<1), and the pipe (|), but they aren't directly managed by the command (cat or echo).
+
+No Memory Leaks or Errors: Valgrind's output indicates there are no memory leaks, and no other errors are present. The FDs are just being reported because they remain open at the time Valgrind checks the process status at exit.
 
 
 
