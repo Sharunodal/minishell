@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:33 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/21 11:50:39 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:37:51 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	handle_pipe_error(int *pipefd)
 	close(pipefd[0]);
 	close(pipefd[1]);
 	perror("pipe failed");
+	kill(-1, SIGINT);
 	return (1);
 }
 

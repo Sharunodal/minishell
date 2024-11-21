@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:05:12 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/21 11:24:10 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/21 15:37:43 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,6 +76,7 @@ static int	fork_exec(t_token **token, t_var *var, char *path, char *cmd)
 	if (pid < 0)
 	{
 		perror("fork failed");
+		kill(pid, SIGINT);
 		free(path);
 		return (-1);
 	}
