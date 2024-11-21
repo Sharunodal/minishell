@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:27:40 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/21 11:49:16 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/21 14:54:48 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,8 @@ static void	wait_for_commands(t_var *var, pid_t last_pid)
 			break ;
 		pid = waitpid(-1, &status, 0);
 	}
+	if (var->pipes == 0 && (ft_strcmp(var->cmd_list[0], "exit") == 0))
+		var->exit_code = -2;
 }
 
 static void	handle_parent_process(int num_commands, int *prev_pipefd,
