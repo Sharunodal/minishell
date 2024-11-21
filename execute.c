@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/09 10:05:12 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/18 16:50:34 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/11/21 11:24:10 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,11 +40,12 @@ static int	execve_args(t_token **token, char *cmd_path, t_var *var, int size)
 	return (0);
 }
 
-static int	exec_parent_process(int pid)
+static int	exec_parent_process(int pid, char *path)
 {
 	int	signal_number;
 	int	status;
 
+	free(path);
 	signal(SIGQUIT, handle_sigquit_exec);
 	signal(SIGINT, handle_sigint_exec);
 	if (waitpid(pid, &status, 0) == -1)
@@ -89,10 +90,7 @@ static int	fork_exec(t_token **token, t_var *var, char *path, char *cmd)
 		}
 	}
 	else
-	{
-		free(path);
-		return (exec_parent_process(pid));
-	}
+		return (exec_parent_process(pid, path));
 	return (1);
 }
 

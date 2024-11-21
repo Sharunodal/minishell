@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:33 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/19 14:18:41 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/11/21 11:50:39 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,14 @@ long	ft_atol(const char *str, int i)
 		i++;
 	}
 	return (sign * result);
+}
+
+int	handle_pipe_error(int *pipefd)
+{
+	close(pipefd[0]);
+	close(pipefd[1]);
+	perror("pipe failed");
+	return (1);
 }
 
 int	validate_cmd_path(char *cmd)

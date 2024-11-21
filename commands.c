@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:55:28 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/19 14:04:50 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/21 11:21:29 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,17 @@ static char	*find_command(t_token **token_group)
 	return (NULL);
 }
 
+static int	run_command_helper(t_var *var, t_token **token_group, char *cmd)
+{
+	if (is_builtins(cmd) == 6)
+		return (handle_env(var, token_group));
+	if (is_builtins(cmd) == 7)
+		return (handle_export(token_group, var));
+	if (is_builtins(cmd) == 8)
+		return (handle_unset(token_group, var));
+	return (execute_command(token_group, var, cmd));
+}
+
 int	run_command(t_var *var, t_token **token_group)
 {
 	char	*cmd;
@@ -51,11 +62,5 @@ int	run_command(t_var *var, t_token **token_group)
 		return (handle_echo(token_group));
 	if (is_builtins(cmd) == 5)
 		return (handle_cd(token_group, var));
-	if (is_builtins(cmd) == 6)
-		return (handle_env(var, token_group));
-	if (is_builtins(cmd) == 7)
-		return (handle_export(token_group, var));
-	if (is_builtins(cmd) == 8)
-		return (handle_unset(token_group, var));
-	return (execute_command(token_group, var, cmd));
+	return (run_command_helper(var, token_group, cmd));
 }

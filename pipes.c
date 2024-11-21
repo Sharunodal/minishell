@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/12 16:27:40 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/19 10:36:57 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/21 11:49:16 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ void	handle_pipe(t_token ***token_groups, int num_commands, t_var *var)
 			exit(1);
 		pid = fork();
 		if (pid == -1)
-			exit(1);
+			exit(handle_pipe_error(pipefd));
 		if (pid == 0)
 		{
 			setup_redirect(i, num_commands, prev_pipefd, pipefd);

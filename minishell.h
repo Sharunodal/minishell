@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/15 12:34:03 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/21 11:49:56 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,6 +118,7 @@ int		count_cmd(char **cmd_list);
 /************** utils3 ***************/
 int		ft_envcmp(char *envp, char *str);
 long	ft_atol(const char *str, int i);
+int		handle_pipe_error(int *pipefd);
 int		validate_cmd_path(char *cmd);
 
 /********* check_characters **********/
