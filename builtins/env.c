@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/05 17:45:51 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/19 15:24:51 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/11/23 16:29:20 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,17 +51,35 @@ void	copy_env(t_var *var, char **envp)
 	var->envp = var->og_envp;
 }
 
+static int	check_args(t_token **token, int i)
+{
+	if (token[i + 1] && token[i + 1]->value[0] == '-'
+		&& token[i + 1]->value[1] && ft_isascii(token[i + 1]->value[1]))
+	{
+		ft_putstr_fd("pwd: no option allowed\n", 2);
+		return (2);
+	}
+	if (token[i + 1] && token[i + 1]->type == 2
+		&& token[i + 1]->value[0] != '-')
+	{
+		ft_putstr_fd("pwd: too many arguments\n", 2);
+		return (1);
+	}
+	return (0);
+}
+
 int	handle_env(t_var *var, t_token **token)
 {
 	int		i;
+	int		j;
 	char	*tmp;
 
 	i = find_command_index(token, "env");
-	if (token[i + 1] && token[i + 1]->type == 2)
-	{
-		printf("Too many arguments\n");
-		return (1);
-	}
+	j = check_args(token, i);
+	if (j != 0)
+		return (j);
+	if (token[i + 1] && token[i + 1]->value[0] == '-')
+		return (0);
 	i = 0;
 	while (var->envp[i] != NULL)
 	{

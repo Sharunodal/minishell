@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:55:28 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/21 11:21:29 by arissane         ###   ########.fr       */
+/*   Updated: 2024/11/23 15:55:40 by jmouette         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,11 +53,16 @@ int	run_command(t_var *var, t_token **token_group)
 	if (!cmd)
 		return (0);
 	if (is_builtins(cmd) == 1)
-		return (-2);
+	{
+		if (var->pipes > 0)
+			return (my_exit(token_group));
+		else
+			return (-2);
+	}
 	if (is_builtins(cmd) == 2)
 		return (0);
 	if (is_builtins(cmd) == 3)
-		return (handle_pwd(var));
+		return (handle_pwd(var, token_group));
 	if (is_builtins(cmd) == 4)
 		return (handle_echo(token_group));
 	if (is_builtins(cmd) == 5)
