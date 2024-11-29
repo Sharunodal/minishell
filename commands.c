@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 15:55:28 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/23 15:55:40 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/11/29 13:00:40 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ static char	*find_command(t_token **token_group)
 	i = 0;
 	while (token_group[i] && token_group[i]->value && token_group[i]->type > 2)
 	{
-		if (token_group[i]->type != 6)
+		if (token_group[i]->type != 6 || token_group[i]->type != 5)
 			i++;
 		i++;
 	}
