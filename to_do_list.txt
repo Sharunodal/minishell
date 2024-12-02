@@ -90,7 +90,7 @@ cat <<1''
 Some thoughts of the day:
 
 cat <test1 test2
-result: test1 is opened as input, but cat will priotitise files and only
+result: test1 is opened as input, but cat will prioritise files and only
 	shows the content of test2.
 
 ls > test1 >test2 (test1 doesn't exist, test2 has no permission to write)
