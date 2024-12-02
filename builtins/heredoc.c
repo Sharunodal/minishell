@@ -6,13 +6,13 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 09:10:36 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/15 10:48:21 by arissane         ###   ########.fr       */
+/*   Updated: 2024/12/02 10:05:17 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-static char	*parse_line(t_var *var, char *line)
+static char	*parse_line(t_var *var, char *line, int quote)
 {
 	int	i;
 
@@ -20,7 +20,8 @@ static char	*parse_line(t_var *var, char *line)
 	while (line[i])
 	{
 		if (line[i] == '$' && line[i + 1] && line[i + 1] != ' '
-			&& line[i + 1] != '\"' && line[i + 1] != '\'' && line[i + 1] != '$')
+			&& line[i + 1] != '\"' && line[i + 1] != '\'' && line[i + 1] != '$'
+			&& quote == 0)
 			line = get_env_value(var, line, i);
 		i++;
 	}
@@ -43,7 +44,7 @@ int	redirect_heredoc(t_var *var, t_token *token)
 
 //start a loop of readline until delimiter is encountered and write to
 //var->heredoc_fds[]. If ctrl-C, stdin is closed and g_signal set to SIGINT
-static int	create_heredoc(t_var *var, char *delimiter, int heredoc_index)
+static int	create_heredoc(t_var *var, char *delimiter, int heredoc_index, int quote)
 {
 	int		pipe_fd[2];
 	char	*line;
@@ -56,7 +57,7 @@ static int	create_heredoc(t_var *var, char *delimiter, int heredoc_index)
 		line = readline("> ");
 		if (!line || ft_strcmp(line, delimiter) == 0)
 			break ;
-		line = parse_line(var, line);
+		line = parse_line(var, line, quote);
 		ft_putstr_fd(line, pipe_fd[1]);
 		write(pipe_fd[1], "\n", 1);
 		if (line)
@@ -73,6 +74,7 @@ static int	create_heredoc(t_var *var, char *delimiter, int heredoc_index)
 int	handle_heredoc(t_var *var, t_token *tokens)
 {
 	int		i;
+	int		quote;
 	char	*delimiter;
 
 	i = 0;
@@ -80,12 +82,14 @@ int	handle_heredoc(t_var *var, t_token *tokens)
 	{
 		while (tokens[i].value)
 		{
+			quote = 0;
 			if (tokens[i].type == HEREDOC)
 			{
+				quote = check_if_expand(tokens[i + 1].value);
 				delimiter = remove_quotes(tokens[i + 1].value);
 				signal(SIGINT, handle_sigint_heredoc);
 				if (create_heredoc(var, delimiter,
-						tokens[i].heredoc_index) == 1)
+						tokens[i].heredoc_index, quote) == 1)
 				{
 					return (1);
 				}

@@ -1,6 +1,6 @@
 Left to do:
 *"cat << 1 | echo a" -> multiple fds left open in the child process?
-from chatgpt:
+Potentially:
 What’s Happening with These FDs:
 
 FD 3 (/dev/pts/2): This is typical for interactive terminal sessions. It’s the pseudo-terminal that the shell and programs use to interact with your terminal.
@@ -62,6 +62,29 @@ Should be working for now:
 -<< <  > >> (probably works now?)
 - unset
 - export & export ARG
+
+
+Tests:
+""
+127
+/bin/ls/hi
+126
+/bin/ks
+127
+echo -n -nN
+exit 1 a
+exit a 1
+	| echo hi
+echo "$"$"$"
+export hi
+export hi=
+export test1="ls -la" test2="ls"
+$test1
+unset test1 test2
+<infile>outfile cat
+echo a |>outfile
+cat <<1''
+
 
 
 Some thoughts of the day:

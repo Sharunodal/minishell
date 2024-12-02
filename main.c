@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/03 10:42:58 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/15 09:43:08 by arissane         ###   ########.fr       */
+/*   Updated: 2024/12/02 10:06:23 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ static int	run_shell(t_var *var, int exit_code)
 		close(var->fd_in);
 		if (var->exit_code == -2)
 		{
-			exit_code = 1;
+			exit_code = 0;
 			if (var->token_groups != NULL)
 				exit_code = my_exit(var->token_groups[0]);
 			if (exit_code != -3)

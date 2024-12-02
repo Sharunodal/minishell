@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/30 11:29:33 by arissane          #+#    #+#             */
-/*   Updated: 2024/11/21 15:37:51 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/12/02 10:00:40 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -91,4 +91,18 @@ int	validate_cmd_path(char *cmd)
 		ft_putstr_fd(" Permission denied\n", 2);
 	}
 	return (error_code);
+}
+
+int	check_if_expand(char *delimiter)
+{
+	int	i;
+
+	i = 0;
+	while (delimiter[i])
+	{
+		if (delimiter[i] == '\'')
+			return (1);
+		i++;
+	}
+	return (0);
 }

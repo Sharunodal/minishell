@@ -6,7 +6,7 @@
 /*   By: jmouette <jmouette@student.hive.fi>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/10 16:34:15 by jmouette          #+#    #+#             */
-/*   Updated: 2024/11/23 15:37:50 by jmouette         ###   ########.fr       */
+/*   Updated: 2024/12/02 10:01:45 by arissane         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,6 +120,7 @@ int		ft_envcmp(char *envp, char *str);
 long	ft_atol(const char *str, int i);
 int		handle_pipe_error(int *pipefd);
 int		validate_cmd_path(char *cmd);
+int		check_if_expand(char *delimiter);
 
 /********* check_characters **********/
 void	check_characters(t_token **token_group);
